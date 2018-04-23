@@ -1,0 +1,4 @@
+/.gradle/
+*.core.prefs
+.project
+.classpath

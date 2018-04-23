@@ -79,14 +79,12 @@ public class Runner implements IProgressIfaListener{
 		o=new Option("n",Messages.getMessage("option.delta.new"));
 		o.setArgs(2);
 		o.setLongOpt("new-delta");
-		o.setValueSeparator(' ');
 		o.setArgName(Messages.getMessage("option.delta.baseline"));
 		g.addOption(o);
 		
 		o=new Option("r",Messages.getMessage("option.delta.resolved"));
 		o.setArgs(2);
 		o.setLongOpt("resolved-delta");
-		o.setValueSeparator(' ');
 		o.setArgName(Messages.getMessage("option.delta.baseline"));
 		g.addOption(o);
 		
