@@ -1,5 +1,5 @@
 /**
- * ©  Copyright HCL Technologies Ltd. 2017.  All Rights Reserved.
+ *   Copyright HCL Technologies Ltd. 2017.  All Rights Reserved.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -222,7 +222,7 @@ public class Runner implements IProgressIfaListener{
 			//e.printStackTrace();
 			System.out.println(Messages.getMessage("err.process.command",
 					(s_action!=null)?s_action.getClass().getName():Messages.getMessage("action.null"),e.getLocalizedMessage()));
-			help();
+			//help();
 		}
 	}
 
@@ -318,11 +318,13 @@ public class Runner implements IProgressIfaListener{
 	@Override
 	public void handleProgress(int progress) {
 		if (progress<=100){
-			System.out.print("\r"+new String(new char[200]).replace('\0', ' '));
+			System.out.print("\r"+new String(new char[80]).replace('\0', ' '));
 			if (m_current_stage.equals("Completed.")) {
-				System.out.print("\r"+Messages.getMessage("progress",m_current_title,m_current_stage,100));
+				System.out.print("\r"+Messages.getMessage("progress",trimStringToSize(m_current_title,36),
+						trimStringToSize(m_current_stage,36),100));
 			} else {
-				System.out.print("\r"+Messages.getMessage("progress",m_current_title,m_current_stage,progress));
+				System.out.print("\r"+Messages.getMessage("progress",trimStringToSize(m_current_title,36),
+						trimStringToSize(m_current_stage,36),progress));
 			}
 		}
 	}
@@ -338,9 +340,16 @@ public class Runner implements IProgressIfaListener{
 	}
 	@Override
 	public void handleComplete(String completed_url) {
-		System.out.print("\r"+new String(new char[200]).replace('\0', ' '));
-		System.out.print("\r"+Messages.getMessage("progress.complete",m_current_stage));
+		System.out.print("\r"+new String(new char[80]).replace('\0', ' '));
+		System.out.print("\r"+Messages.getMessage("progress.complete",trimStringToSize(m_current_stage,36)));
 		System.out.println();
 		System.out.println(Messages.getMessage("job.completed.url", completed_url));
+	}
+	
+	private String trimStringToSize(String s, int size) {
+		if (s.length()>size) {
+			return s.substring(0, size);
+		}
+		return s;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * ©  Copyright HCL Technologies Ltd. 2017.  All Rights Reserved.
+ *   Copyright HCL Technologies Ltd. 2017.  All Rights Reserved.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -86,7 +86,7 @@ public abstract class IfaAction {
 				setTagetFile(getFile().getParentFile());
 			}
 		}
-		
+
 		if (getTargetFile()==null){
 			setTagetFile(new File("."));
 		}
@@ -190,17 +190,41 @@ public abstract class IfaAction {
 
 	}
 	private boolean isResponseGood(ArrayList<File>files) throws FileNotFoundException, XMLStreamException{
-		System.out.println();
 		System.out.println(Messages.getMessage("process.verify"));
+		int orig=getFindingCount(getFile());
+		int ret=0;
 		for (File f:files){
 			try {
-			new AssessmentDetails(f);
+				ret+=getFindingCount(f);
 			}catch (Exception e){
-				e.printStackTrace();
+				System.out.println(Messages.getMessage("err.fail.verify",e.getLocalizedMessage()));
 			}
 		}
+		if (orig!=ret) {
+			System.out.println(Messages.getMessage("err.finding.count.off",orig,ret));
+		}
+
 		return true;
 	}
+
+	private int getFindingCount(File dir) throws FileNotFoundException, XMLStreamException {
+		int ret=0;
+		if (dir.isDirectory()) {
+			for (File f:dir.listFiles()) {
+				try {
+				ret+=getFindingCount(f);
+				}catch (Exception e) {
+					
+				}
+			}
+
+
+		}
+		AssessmentDetails a=new AssessmentDetails(dir);
+		ret+=a.getFindingCount()+a.getExcludedFindingCount();
+		return ret;
+	}
+
 	protected void setFile(File f){
 		m_file=f;
 	}
@@ -297,7 +321,7 @@ public abstract class IfaAction {
 			SizeLimitExceededException, 
 			JSONException, 
 			InterruptedException, XMLStreamException
-			{
+	{
 
 		File zip=null;
 		File ret_zip=new File(new File("upifa.zip").getAbsolutePath());
@@ -323,7 +347,7 @@ public abstract class IfaAction {
 			}
 			ArrayList<File>ret=null;
 			try {
-			ret=getCompletedJob(job);
+				ret=getCompletedJob(job);
 			}catch (IfaClientException e){
 				throw e;
 			}catch (Exception e){
@@ -361,7 +385,7 @@ public abstract class IfaAction {
 		return new HttpPost(getConnection(
 				getRestPath(),getRequestType()).toString());
 	}
-	
+
 	protected HttpPost getPost(HashMap<String, String>query_parameters) throws IfaClientException{
 		StringBuilder url=new StringBuilder();
 		url.append(getConnection(
@@ -380,7 +404,7 @@ public abstract class IfaAction {
 		}
 		return new HttpPost(url.toString());
 	}
-	
+
 	private JSONObject getJobStatus(String job_id) throws KeyManagementException, ClientProtocolException, NoSuchAlgorithmException, KeyStoreException, IOException, IfaClientException, JSONException{
 		return new JSONObject(getResponse(getClient().execute(new HttpGet(getConnection(
 				"v1/jobs/"+job_id,REQUEST_TYPE.GET).toString()))));
