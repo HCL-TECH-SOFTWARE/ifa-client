@@ -170,6 +170,7 @@ public abstract class IfaAction {
 						e=new IfaClientException(Messages.getMessage("err.self.signed.cert", getHost()));
 					} catch (IOException ioe){
 						e=ioe;
+						ioe.printStackTrace();
 					} catch (NumberFormatException nme){
 						e=nme;
 					} catch (Exception ee){
@@ -190,17 +191,23 @@ public abstract class IfaAction {
 
 	}
 	private boolean isResponseGood(ArrayList<File>files) throws FileNotFoundException, XMLStreamException{
+		System.out.println();
 		System.out.println(Messages.getMessage("process.verify"));
-		int orig=getFindingCount(getFile());
+		int orig=-1;
+		if (getFile().isFile()) {
+			orig=getFindingCount(getFile());
+		}
+		
 		int ret=0;
 		for (File f:files){
 			try {
 				ret+=getFindingCount(f);
 			}catch (Exception e){
 				System.out.println(Messages.getMessage("err.fail.verify",e.getLocalizedMessage()));
+				throw e;
 			}
 		}
-		if (orig!=ret) {
+		if (orig!=-1 && orig!=ret) {
 			System.out.println(Messages.getMessage("err.finding.count.off",orig,ret));
 		}
 
@@ -214,7 +221,7 @@ public abstract class IfaAction {
 				try {
 				ret+=getFindingCount(f);
 				}catch (Exception e) {
-					
+					throw e;
 				}
 			}
 
