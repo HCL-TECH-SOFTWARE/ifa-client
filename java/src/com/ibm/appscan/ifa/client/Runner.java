@@ -7,6 +7,7 @@ package com.ibm.appscan.ifa.client;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -88,6 +89,9 @@ public class Runner implements IProgressIfaListener{
 		o.setArgName(Messages.getMessage("option.delta.baseline"));
 		g.addOption(o);
 		
+		o=new Option("z", "remove-empty-delta",false, Messages.getMessage("option.zero.delta"));
+		o.setArgName(Messages.getMessage("option.delta.baseline"));
+		m_options.addOption(o); //TODO removed for work item 101142
 		m_options.addOptionGroup(g);
 		
 		
@@ -116,12 +120,16 @@ public class Runner implements IProgressIfaListener{
 			boolean allow_self_signed=false;
 			boolean version=false;
 			boolean health=false;
+			boolean remove_0_delta=false;
 			File target =null;
 			File f =null;
 			File baseline = null;
 			String target_file_name=null;
 			line= parser.parse(m_options, m_args);
 			ArrayList<String>hosts=new ArrayList<String>();
+			if (line.hasOption("z")) {
+				remove_0_delta=true;
+			}
 			if (line.hasOption("f")){
 				target_file_name= line.getOptionValue("f");
 			} 
@@ -199,12 +207,29 @@ public class Runner implements IProgressIfaListener{
 				s_action=new DeltaNew(f, target,target_file_name, baseline,debug, allow_self_signed,hosts);
 				ArrayList<File> ret=s_action.run();
 				printDiffResults("diff.details.new",f, baseline, ret.get(0),start);
+				if (remove_0_delta) {
+					AssessmentDetails ad=new AssessmentDetails(ret.get(0));
+					if (ad.getFindingCount()==0) {
+						System.out.println(Messages.getMessage("zero.delta",
+								Messages.getMessage("delta.new"),
+								ret.get(0).getCanonicalPath()));
+						ret.get(0).delete();
+					}
+				}
 			}
 			if (delta_resolved){
 				long start=System.currentTimeMillis();
 				s_action=new DeltaResolved(f, target, target_file_name,baseline,debug, allow_self_signed,hosts);
 				ArrayList<File> ret=s_action.run();
 				printDiffResults("diff.details.resolved",f, baseline, ret.get(0),start);
+				if (remove_0_delta) {
+					AssessmentDetails ad=new AssessmentDetails(ret.get(0));
+					if (ad.getFindingCount()==0) {
+						System.out.println(Messages.getMessage("zero.delta", 
+								Messages.getMessage("delta.missing"),ret.get(0).getCanonicalPath()));
+						ret.get(0).delete();
+					}
+				}
 			}
 
 		} catch (ParseException e) {
@@ -256,7 +281,7 @@ public class Runner implements IProgressIfaListener{
 		return ret;
 	}
 	
-	private void printDiffResults(String head,File orig, File baseline, File result, long start) throws FileNotFoundException, XMLStreamException {
+	private void printDiffResults(String head,File orig, File baseline, File result, long start) throws XMLStreamException, IOException {
 		System.out.println();
 		System.out.println(Messages.getMessage("diff.details.head"));
 		System.out.println(Messages.getMessage("diff.details.orig",orig.getPath()));
@@ -281,14 +306,14 @@ public class Runner implements IProgressIfaListener{
 			printAssessmentDetails(a);
 		}*/
 	}
-	private void printIFAAssessmentDetails(File f, long start) throws FileNotFoundException, XMLStreamException {
+	private void printIFAAssessmentDetails(File f, long start) throws XMLStreamException, IOException {
 		System.out.println();
 		SimpleDateFormat sdf = new SimpleDateFormat("mm:ss.SSS");
 		System.out.println(Messages.getMessage("time", sdf.format(System.currentTimeMillis()-start)));
 		printAssessmentDetails(f);
 	}
 
-	private static void printAssessmentDetails(File file) throws FileNotFoundException, XMLStreamException{
+	private static void printAssessmentDetails(File file) throws XMLStreamException, IOException{
 		AssessmentDetails ad=new AssessmentDetails(file);
 		System.out.println(Messages.getMessage("details",
 				ad.getApplicationName(),

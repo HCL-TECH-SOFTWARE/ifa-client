@@ -190,7 +190,7 @@ public abstract class IfaAction {
 	protected void cleanUp(){
 
 	}
-	private boolean isResponseGood(ArrayList<File>files) throws FileNotFoundException, XMLStreamException{
+	private boolean isResponseGood(ArrayList<File>files) throws Exception{
 		System.out.println();
 		System.out.println(Messages.getMessage("process.verify"));
 		int orig=-1;
@@ -214,7 +214,7 @@ public abstract class IfaAction {
 		return true;
 	}
 
-	private int getFindingCount(File dir) throws FileNotFoundException, XMLStreamException {
+	private int getFindingCount(File dir) throws XMLStreamException, IOException {
 		int ret=0;
 		if (dir.isDirectory()) {
 			for (File f:dir.listFiles()) {
@@ -377,6 +377,9 @@ public abstract class IfaAction {
 		} catch (SSLException e) {
 			e.printStackTrace();
 			throw new IfaClientException(Messages.getMessage("err.server.no.response"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new IfaClientException(e);
 		}
 		finally{
 			if (zip!=null && zip.exists() && !m_debug){
