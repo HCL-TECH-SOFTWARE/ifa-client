@@ -56,6 +56,8 @@ usage: java -jar ifa-client.jar [-c] [-g <Assessment File> | -i <Assessment
                                                                 results into a fresh directory. Files of the same name will be overwritten.
   -v,--version                                                  Prints the
                                                                 version of the supplied host.
+  -z,--remove-empty-delta                                       Remove delta
+                                                              results with 0 findings								
 ```
 
 # IFA
@@ -105,6 +107,8 @@ Time taken to determine solution groups: 00:01.482
 # Delta analysis
 1) New findings run `java -jar ifa-client.jar -n <baseline assessment file> <new assessment file>`
 2) Resolved findings run `java -jar ifa-client.jar -r <baseline assessment file> <new assessment file>`
+
+Using the -z option in conjunction with either -n or -r will remove the returned assessment from the file system should it have 0 findings as a result of the delta operation.
 
 ## Example
 ```sh
