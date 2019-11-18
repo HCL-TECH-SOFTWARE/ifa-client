@@ -1,5 +1,8 @@
 # IFA Server Documentation
-[On-line Documentation](http://www-01.ibm.com/support/docview.wss?uid=swg22004133)
+Contained in the readme that ships with the IFA Server.
+
+# IFA Server SSL configuration
+The IFA Server uses an IBM Liberty back end. To configure Liberty for proper SSL use go to [IBM Liberty SSL Configuration](https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_sec_ssl.html)
 
 # ifa-client
 Client REST tool for Intelligent Finding Analytics (IFA) Server
