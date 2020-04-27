@@ -26,6 +26,7 @@ public class AssessmentDetails {
 	private int m_med_findings=0;
 	private int m_low_findings=0;
 	private int m_excluded_findings=0;
+	private int m_info_findings=0;
 	private String m_app_name;
 	public AssessmentDetails(File f) throws XMLStreamException, IOException {
 		m_stream=new BufferedInputStream(new FileInputStream(f));
@@ -42,10 +43,14 @@ public class AssessmentDetails {
 	public int getLowFindingCount(){
 		return m_low_findings;
 	}
+	public int getInfoFindingCount(){
+		return m_info_findings;
+	}
 	public int getFindingCount(){
 		return m_high_findings+
 				m_med_findings+
-				m_low_findings;
+				m_low_findings+
+				m_info_findings;
 	}
 	
 	public int getExcludedFindingCount(){
@@ -73,6 +78,7 @@ public class AssessmentDetails {
 						m_med_findings=Integer.parseInt(getReader().getAttributeValue(null, "total_med_finding"));
 						m_low_findings=Integer.parseInt(getReader().getAttributeValue(null, "total_low_finding"));
 						m_excluded_findings=Integer.parseInt(getReader().getAttributeValue(null, "total_excluded_findings"));
+						m_info_findings=Integer.parseInt(getReader().getAttributeValue(null, "total_info_finding"));
 					}
 					if ("Application".equals(getReader().getLocalName())){
 						m_app_name=getReader().getAttributeValue(null, "name");
