@@ -320,7 +320,8 @@ public class Runner implements IProgressIfaListener{
 				ad.getFindingCount(),
 				ad.getHighFindingCount(),
 				ad.getMedFindingCount(),
-				ad.getLowFindingCount()));
+				ad.getLowFindingCount(),
+				ad.getInfoFindingCount()));
 		System.out.println(Messages.getMessage("details.excluded", 
 				ad.getExcludedFindingCount()));
 	}
