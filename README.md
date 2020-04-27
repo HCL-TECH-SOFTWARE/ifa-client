@@ -85,6 +85,7 @@ Details for WebGoat-Legacy-archive_5_4:
 	High: 42
 	Medium: 8
 	Low: 86
+	Info: 0
 	Excluded: 1,460
 IFA assessment path:./WebGoat-Legacy-archive_5_4_IFA.ozasmt
 
@@ -131,6 +132,7 @@ Details for WebGoat-Legacy-archive_5_4:
 	High: 42
 	Medium: 8
 	Low: 86
+	Info: 0
 	Excluded: 1,460
 Baseline: webgoat.ozasmt
 Details for WebGoat-Legacy-archive_5_4:
@@ -138,6 +140,7 @@ Details for WebGoat-Legacy-archive_5_4:
 	High: 156
 	Medium: 149
 	Low: 1,105
+	Info: 0
 	Excluded: 0
 Resolved: ./WebGoat-Legacy-archive_5_4_resolved.ozasmt
 Details for WebGoat-Legacy-archive_5_4:
@@ -145,6 +148,7 @@ Details for WebGoat-Legacy-archive_5_4:
 	High: 118
 	Medium: 139
 	Low: 1,203
+	Info: 0
 	Excluded: 0
 Time taken to determine diff: 00:02.051
 ```
